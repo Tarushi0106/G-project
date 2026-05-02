@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -110,8 +109,7 @@
 </div>
 
 <script>
-  var urlParams = new URLSearchParams(window.location.search);
-  var stored   = localStorage.getItem('enrollEmail') || urlParams.get('email') || 'tarushi0106@gmail.com';
+  var stored   = localStorage.getItem('enrollEmail') || '';
   var statusEl = document.getElementById('emailStatus');
 
   function setStatus(type, html) {
@@ -122,22 +120,28 @@
   function doSend(toEmail) {
     if (!toEmail) return;
 
-    console.log("Sending email to:", toEmail);
-    emailjs.init("pDPg_VW_dN1dOnjTJ");
     setStatus('sending', '<span class="spin"></span>&nbsp; Sending confirmation email…');
 
-    emailjs.send("service_jmgol08", "template_32t91xo", {
-      to_email      : toEmail,
-      whatsapp_link : "https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2"
+    fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: toEmail,
+        subject: 'AI Income Masterclass - Enrollment Confirmation',
+        whatsapp_link: 'https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2'
+      })
     })
-    .then(function(res) {
-      console.log("EmailJS success:", res);
-      setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
-      localStorage.removeItem('enrollEmail');
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
+        localStorage.removeItem('enrollEmail');
+      } else {
+        setStatus('error', '⚠️ ' + data.error);
+      }
     })
-    .catch(function(err) {
-      console.error("EmailJS error:", JSON.stringify(err));
-      setStatus('error', '⚠️ Error ' + (err.status || '') + ': ' + (err.text || JSON.stringify(err)));
+    .catch(err => {
+      setStatus('error', '⚠️ Network error');
     });
   }
 
