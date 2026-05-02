@@ -288,6 +288,25 @@ body{
   color:rgba(255,255,255,.6);
   margin-bottom:20px;
 }
+.offer-photo-wrap{
+  margin:28px auto 0;
+  width:150px;height:150px;
+  border-radius:50%;
+  border:4px solid var(--y);
+  overflow:hidden;
+  box-shadow:0 0 0 8px rgba(245,158,11,.15), 0 16px 48px rgba(0,0,0,.4);
+}
+.offer-photo{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:center top;
+  display:block;
+}
+.offer-photo-name{
+  margin-top:16px;
+  font-size:22px;font-weight:900;
+  color:#fff;letter-spacing:-.02em;
+}
 .offer-desc{
   font-size:15.5px;
   color:rgba(255,255,255,.5);
@@ -711,7 +730,11 @@ body{
   <div class="wrap center reveal" style="position:relative">
     <span class="section-kicker">Introducing</span>
     <div class="offer-name">AI Income Masterclass</div>
-    <div class="offer-byline">by Geetanshu Chhabra</div>
+    <div class="offer-photo-wrap">
+      <img src="pic.jpeg" alt="Geetanshu Chhabra" class="offer-photo" />
+    </div>
+    <div class="offer-photo-name">Geetanshu Chhabra</div>
+    <div class="offer-byline">AI Educator &amp; Digital Creator</div>
     <p class="offer-desc">A complete, beginner-friendly system to start earning online using AI tools — no technical skills or prior experience needed.</p>
   </div>
 </section>
