@@ -72,23 +72,6 @@
     @keyframes waglow{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.42)}50%{box-shadow:0 6px 36px rgba(37,211,102,.66)}}
     .wa-btn:hover{transform:translateY(-2px)}
 
-    /* email input row (shown if no email in storage) */
-    #emailRow{display:none;margin-bottom:18px}
-    #emailRow input{
-      width:100%;padding:13px 16px;
-      border:1.5px solid #e5e7eb;border-radius:100px;
-      font-size:14px;font-family:'Inter',sans-serif;
-      outline:none;color:#0a0a0a;margin-bottom:10px;
-    }
-    #emailRow input:focus{border-color:#f59e0b}
-    #resendBtn{
-      width:100%;background:#f59e0b;color:#0a0a0a;
-      font-size:14px;font-weight:800;
-      padding:13px;border-radius:100px;
-      border:none;cursor:pointer;
-      font-family:'Inter',sans-serif;
-    }
-
     .foot-note{font-size:12px;color:#9ca3af;line-height:1.75;margin-top:4px}
     .brand{margin-top:28px;font-size:13px;color:#9ca3af;line-height:1.8}
     .brand strong{color:#374151}
@@ -103,12 +86,6 @@
 
   <!-- Live status badge -->
   <div id="emailStatus"></div>
-
-  <!-- Fallback: manual email input if auto-send couldn't find stored email -->
-  <div id="emailRow">
-    <input type="email" id="manualEmail" placeholder="✉️  Enter your email to receive details" />
-    <button id="resendBtn" onclick="sendWithManualEmail()">📧 Send Confirmation Email</button>
-  </div>
 
   <div class="message-box">
     <p>All the important updates, including <strong>date, time, and joining details</strong>, will be shared inside our WhatsApp Community.</p>
@@ -175,35 +152,15 @@
         localStorage.removeItem('enrollEmail');
         document.getElementById('emailRow').style.display = 'none';
       } else {
-        setStatus('error', '⚠️ ' + msg + ' — try again or screenshot this page');
-        showManualInput();
+        setStatus('error', '⚠️ ' + msg + ' — please screenshot this page');
       }
-    }).catch(function(err) {
-      setStatus('error', '⚠️ Could not send email — try entering it below');
-      showManualInput();
+    }).catch(function() {
+      setStatus('error', '⚠️ Could not send email — please screenshot this page');
     });
   }
 
-  function showManualInput() {
-    document.getElementById('emailRow').style.display = 'block';
-  }
-
-  function sendWithManualEmail() {
-    var email = document.getElementById('manualEmail').value.trim();
-    if (!email) {
-      document.getElementById('manualEmail').style.borderColor = '#ef4444';
-      return;
-    }
-    doSend(email);
-  }
-
   window.addEventListener('load', function() {
-    if (stored) {
-      doSend(stored);
-    } else {
-      // No email in storage — show manual input
-      showManualInput();
-    }
+    if (stored) doSend(stored);
   });
 </script>
 </body>
