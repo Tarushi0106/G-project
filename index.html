@@ -604,8 +604,30 @@ body{
 .footer strong{color:rgba(255,255,255,.85)}
 .footer a{color:var(--y);text-decoration:none}
 
+/* ── STICKY MOBILE CTA ── */
+#stickyCta{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  padding:12px 18px 16px;
+  z-index:300;
+  box-shadow:0 -6px 28px rgba(0,0,0,.1);
+}
+#stickyCta button{
+  width:100%;
+  background:var(--y);color:var(--ink);
+  font-size:15px;font-weight:900;
+  padding:15px;border-radius:100px;
+  border:none;cursor:pointer;
+  font-family:'Inter',sans-serif;
+  letter-spacing:-.01em;
+}
+
 @media(max-width:640px){
   .pcard{padding:32px 22px}
+  #stickyCta{display:block}
   .hero{padding:64px 0 56px}
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.92) translateY(18px)}to{opacity:1;transform:none}}
@@ -969,6 +991,11 @@ body{
   </div>
 </section>
 
+<!-- STICKY MOBILE CTA -->
+<div id="stickyCta">
+  <button onclick="openDetailsModal()">⚡ Enroll Now</button>
+</div>
+
 <!-- FOOTER -->
 <footer class="footer">
   <strong>Geetanshu Chhabra</strong> · AI Income Masterclass<br>
@@ -1125,6 +1152,15 @@ function toggleFaq(btn) {
   document.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('open'); });
   if (!open) item.classList.add('open');
 }
+
+/* ── STICKY CTA ── */
+var heroEl = document.querySelector('.hero');
+var stickyEl = document.getElementById('stickyCta');
+window.addEventListener('scroll', function() {
+  if (window.innerWidth <= 640) {
+    stickyEl.style.display = window.scrollY > (heroEl ? heroEl.offsetHeight : 300) ? 'block' : 'none';
+  }
+}, { passive: true });
 
 /* ── SCROLL REVEAL ── */
 var observer = new IntersectionObserver(function(entries) {
