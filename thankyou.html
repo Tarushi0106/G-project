@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -111,10 +111,7 @@
 </div>
 
 <script>
-  var FROM    = "geetanshuchhabra123@gmail.com";
-  var PASS    = "yicjliyvzuwadtfr";
-
-  var stored  = localStorage.getItem('enrollEmail') || '';
+  var stored   = localStorage.getItem('enrollEmail') || '';
   var statusEl = document.getElementById('emailStatus');
 
   function setStatus(type, html) {
@@ -125,35 +122,18 @@
   function doSend(toEmail) {
     if (!toEmail) return;
 
+    emailjs.init("pDPg_VW_dN1dOnjTJ");
     setStatus('sending', '<span class="spin"></span>&nbsp; Sending confirmation email…');
 
-    var body =
-      "Hi,\n\n" +
-      "You're Successfully Enrolled! 🎉\n\n" +
-      "All the important updates, including date, time, and joining details, " +
-      "will be shared inside our WhatsApp Community.\n\n" +
-      "👉 Please join the community using the link below to stay updated and avoid missing anything.\n\n" +
-      "📲 Join Here: https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2\n\n" +
-      "We're excited to have you onboard — see you inside!\n\n" +
-      "— Geetanshu Chhabra\n" +
-      "AI Income Masterclass";
-
-    Email.send({
-      Host     : "smtp.gmail.com",
-      Username : FROM,
-      Password : PASS,
-      To       : toEmail,
-      From     : FROM,
-      Subject  : "You're Successfully Enrolled! 🎉 – AI Income Masterclass",
-      Body     : body
-    }).then(function(msg) {
-      if (msg === "OK") {
-        setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
-        localStorage.removeItem('enrollEmail');
-      } else {
-        setStatus('error', '⚠️ ' + msg + ' — please screenshot this page');
-      }
-    }).catch(function() {
+    emailjs.send("service_jmgol08", "template_32t91xo", {
+      to_email      : toEmail,
+      whatsapp_link : "https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2"
+    })
+    .then(function() {
+      setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
+      localStorage.removeItem('enrollEmail');
+    })
+    .catch(function() {
       setStatus('error', '⚠️ Could not send email — please screenshot this page');
     });
   }
