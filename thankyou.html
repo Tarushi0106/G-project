@@ -122,6 +122,7 @@
   function doSend(toEmail) {
     if (!toEmail) return;
 
+    console.log("Sending email to:", toEmail);
     emailjs.init("pDPg_VW_dN1dOnjTJ");
     setStatus('sending', '<span class="spin"></span>&nbsp; Sending confirmation email…');
 
