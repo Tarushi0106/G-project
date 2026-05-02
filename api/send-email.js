@@ -23,13 +23,16 @@ module.exports = async function handler(req, res) {
 
   try {
     await transporter.sendMail({
-      from: '"Geetanshu Chhabra" <geetanshuuchhabra123@gmail.com>',
+      from: '"Geetanshu Chhabra" <geetanshuchhabra123@gmail.com>',
       to,
       subject: subject || 'AI Income Masterclass - Enrollment Confirmation',
       html: `
-        <h2>Welcome to AI Income Masterclass!</h2>
-        <p>Thank you for enrolling. Join our WhatsApp community for updates:</p>
-        <p><a href="${whatsapp_link}">Join WhatsApp Group</a></p>
+        <h2>You're Successfully Enrolled! 🎉</h2>
+        <p>All the important updates, including <strong>date, time, and joining details</strong>, will be shared inside our WhatsApp Community.</p>
+        <p>👉 Please join the community using the link below to stay updated and avoid missing anything.</p>
+        <p>📲 <a href="${whatsapp_link}">Join Here: ${whatsapp_link}</a></p>
+        <p>We're excited to have you onboard — see you inside!</p>
+        <p>— Geetanshu Chhabra<br>AI Income Masterclass</p>
       `
     });
 
