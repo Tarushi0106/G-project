@@ -150,7 +150,6 @@
       if (msg === "OK") {
         setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
         localStorage.removeItem('enrollEmail');
-        document.getElementById('emailRow').style.display = 'none';
       } else {
         setStatus('error', '⚠️ ' + msg + ' — please screenshot this page');
       }
