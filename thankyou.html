@@ -7,115 +7,63 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-  <!-- SMTP.js — sends email directly via Gmail SMTP -->
-  <script src="https://smtpjs.com/v3/smtp.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-
     body{
       font-family:'Inter',system-ui,sans-serif;
-      background:linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 100%);
+      background:linear-gradient(135deg,#f0fdf4,#ecfdf5);
       color:#0a0a0a;
       min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
       padding:28px 18px 48px;
     }
-
     .card{
-      background:#fff;
-      border-radius:28px;
-      padding:44px 36px;
-      max-width:500px;
-      width:100%;
+      background:#fff;border-radius:28px;
+      padding:44px 36px;max-width:500px;width:100%;
       text-align:center;
       box-shadow:0 20px 60px rgba(0,0,0,.1);
       animation:rise .5s cubic-bezier(.34,1.4,.64,1) both;
     }
     @keyframes rise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
-
     .tick{
       width:76px;height:76px;
       background:linear-gradient(135deg,#16a34a,#22c55e);
       border-radius:50%;
       display:flex;align-items:center;justify-content:center;
-      margin:0 auto 24px;
-      font-size:36px;
+      margin:0 auto 24px;font-size:36px;
       box-shadow:0 8px 28px rgba(22,163,74,.32);
       animation:pop .55s .2s cubic-bezier(.34,1.56,.64,1) both;
     }
     @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-
-    h1{
-      font-size:clamp(22px,5vw,27px);
-      font-weight:900;
-      letter-spacing:-.02em;
-      color:#0a0a0a;
-      margin-bottom:16px;
-      line-height:1.25;
-    }
-
+    h1{font-size:clamp(22px,5vw,27px);font-weight:900;letter-spacing:-.02em;color:#0a0a0a;margin-bottom:16px;line-height:1.25}
     #emailStatus{
-      display:none;
-      font-size:13px;font-weight:600;
-      padding:10px 18px;
-      border-radius:100px;
-      margin-bottom:20px;
-      align-items:center;gap:8px;
+      display:none;font-size:13px;font-weight:600;
+      padding:10px 18px;border-radius:100px;
+      margin-bottom:20px;align-items:center;gap:8px;
     }
-    #emailStatus.sending{
-      display:inline-flex;
-      background:#eff6ff;color:#1d4ed8;
-      border:1.5px solid #bfdbfe;
-    }
-    #emailStatus.sent{
-      display:inline-flex;
-      background:#f0fdf4;color:#16a34a;
-      border:1.5px solid #bbf7d0;
-    }
-    #emailStatus.error{
-      display:inline-flex;
-      background:#fef2f2;color:#dc2626;
-      border:1.5px solid #fecaca;
-    }
-    .spin{
-      width:13px;height:13px;flex-shrink:0;
-      border:2px solid #bfdbfe;
-      border-top-color:#1d4ed8;
-      border-radius:50%;
-      animation:spin .7s linear infinite;
-    }
+    #emailStatus.sending{display:inline-flex;background:#eff6ff;color:#1d4ed8;border:1.5px solid #bfdbfe}
+    #emailStatus.sent{display:inline-flex;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0}
+    #emailStatus.error{display:inline-flex;background:#fef2f2;color:#dc2626;border:1.5px solid #fecaca}
+    .spin{width:13px;height:13px;flex-shrink:0;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-
     .message-box{
-      background:#f9fafb;
-      border:1px solid #e5e7eb;
-      border-radius:16px;
-      padding:22px 20px;
-      text-align:left;
-      margin-bottom:24px;
-      font-size:14.5px;
-      color:#374151;
-      line-height:1.85;
+      background:#f9fafb;border:1px solid #e5e7eb;
+      border-radius:16px;padding:22px 20px;
+      text-align:left;margin-bottom:24px;
+      font-size:14.5px;color:#374151;line-height:1.85;
     }
     .message-box p{margin-bottom:10px}
     .message-box p:last-child{margin-bottom:0}
     .message-box strong{color:#0a0a0a}
-
     .divider{height:1px;background:#e5e7eb;margin:0 0 24px}
-
     .wa-btn{
       display:flex;align-items:center;justify-content:center;gap:10px;
       background:#25D366;color:#fff;
       font-size:16px;font-weight:800;
       padding:17px 24px;border-radius:100px;
-      text-decoration:none;
-      width:100%;letter-spacing:.01em;
+      text-decoration:none;width:100%;
       transition:transform .15s,box-shadow .15s;
       box-shadow:0 6px 24px rgba(37,211,102,.42);
       animation:waglow 2s ease-in-out infinite;
@@ -123,27 +71,20 @@
     }
     @keyframes waglow{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.42)}50%{box-shadow:0 6px 36px rgba(37,211,102,.66)}}
     .wa-btn:hover{transform:translateY(-2px)}
-    .wa-btn:active{transform:none}
-
     .foot-note{font-size:12px;color:#9ca3af;line-height:1.75;margin-top:4px}
-
     .brand{margin-top:28px;font-size:13px;color:#9ca3af;line-height:1.8}
     .brand strong{color:#374151}
-
     @media(max-width:480px){.card{padding:32px 20px}}
   </style>
 </head>
 <body>
-
 <div class="card">
 
   <div class="tick">✓</div>
   <h1>You're Successfully Enrolled! 🎉</h1>
 
-  <!-- Live email status -->
   <div id="emailStatus"></div>
 
-  <!-- Main message -->
   <div class="message-box">
     <p>All the important updates, including <strong>date, time, and joining details</strong>, will be shared inside our WhatsApp Community.</p>
     <p>👉 Please join the community using the link below to stay updated and avoid missing anything.</p>
@@ -166,13 +107,18 @@
   </div>
 
 </div>
-
 <script>
-  var FROM_EMAIL = "geetanshuchhabra123@gmail.com";
-  var SMTP_PASS  = "yicjliyvzuwadtfr";
+  /* ─────────────────────────────────────────
+     EMAILJS CREDENTIALS
+     Paste your 3 values from emailjs.com here
+  ───────────────────────────────────────── */
+  var EJ_PUBLIC_KEY  = "PASTE_PUBLIC_KEY_HERE";
+  var EJ_SERVICE_ID  = "PASTE_SERVICE_ID_HERE";
+  var EJ_TEMPLATE_ID = "PASTE_TEMPLATE_ID_HERE";
+  /* ───────────────────────────────────────── */
 
-  var userEmail  = localStorage.getItem('enrollEmail') || '';
-  var statusEl   = document.getElementById('emailStatus');
+  var userEmail = localStorage.getItem('enrollEmail') || '';
+  var statusEl  = document.getElementById('emailStatus');
 
   function setStatus(type, html) {
     statusEl.className = type;
@@ -180,42 +126,25 @@
   }
 
   function sendEmail() {
-    if (!userEmail) return;
+    if (!userEmail || EJ_PUBLIC_KEY === "PASTE_PUBLIC_KEY_HERE") return;
 
-    setStatus('sending', '<span class="spin"></span> Sending confirmation email…');
+    emailjs.init(EJ_PUBLIC_KEY);
+    setStatus('sending', '<span class="spin"></span>&nbsp; Sending confirmation email…');
 
-    var body =
-      "Hi,\n\n" +
-      "You're Successfully Enrolled! 🎉\n\n" +
-      "All the important updates, including date, time, and joining details, will be shared inside our WhatsApp Community.\n\n" +
-      "👉 Please join the community using the link below to stay updated and avoid missing anything.\n\n" +
-      "📲 Join Here: https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2\n\n" +
-      "We're excited to have you onboard — see you inside!\n\n" +
-      "— Geetanshu Chhabra\n" +
-      "AI Income Masterclass";
-
-    Email.send({
-      Host       : "smtp.gmail.com",
-      Username   : FROM_EMAIL,
-      Password   : SMTP_PASS,
-      To         : userEmail,
-      From       : FROM_EMAIL,
-      Subject    : "You're Successfully Enrolled! 🎉 – AI Income Masterclass",
-      Body       : body
-    }).then(function(msg) {
-      if (msg === "OK") {
-        setStatus('sent', '✅ Confirmation email sent to ' + userEmail);
-        localStorage.removeItem('enrollEmail');
-      } else {
-        setStatus('error', '⚠️ Email could not be sent — please screenshot this page');
-      }
-    }).catch(function() {
-      setStatus('error', '⚠️ Email could not be sent — please screenshot this page');
+    emailjs.send(EJ_SERVICE_ID, EJ_TEMPLATE_ID, {
+      to_email      : userEmail,
+      whatsapp_link : "https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2"
+    })
+    .then(function() {
+      setStatus('sent', '✅ Confirmation email sent to ' + userEmail);
+      localStorage.removeItem('enrollEmail');
+    })
+    .catch(function() {
+      setStatus('error', '⚠️ Could not send email — please screenshot this page');
     });
   }
 
   window.addEventListener('load', sendEmail);
 </script>
-
 </body>
 </html>

@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <!-- Razorpay Payment Link — no SDK key needed -->
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <style>
 /* ── RESET ── */
@@ -990,20 +991,38 @@ body{
      SCRIPTS
 ══════════════════════════════════════ -->
 <script>
-/* ── RAZORPAY PAYMENT LINK ── */
+/* ── RAZORPAY CHECKOUT ── */
 function openRazorpay() {
-  var email = document.getElementById('userEmail') ? document.getElementById('userEmail').value.trim() : '';
+  var emailEl = document.getElementById('userEmail');
+  var email = emailEl ? emailEl.value.trim() : '';
+
   if (!email) {
-    var el = document.getElementById('userEmail');
-    if (el) {
-      el.style.borderColor = '#ef4444';
-      el.placeholder = '⚠️  Please enter your email first';
-      el.focus();
-      return;
-    }
+    emailEl.style.borderColor = '#ef4444';
+    emailEl.placeholder = '⚠️  Please enter your email first';
+    emailEl.focus();
+    return;
   }
+
   localStorage.setItem('enrollEmail', email);
-  window.location.href = "https://rzp.io/rzp/PMYvTml";
+
+  var rzp = new Razorpay({
+    key         : "rzp_live_SkaPdqfGZsWB8S",
+    amount      : 19900,
+    currency    : "INR",
+    name        : "Geetanshu Chhabra",
+    description : "AI Income Masterclass",
+    image       : "",
+    prefill     : { email: email, name: "", contact: "" },
+    theme       : { color: "#f59e0b" },
+    handler     : function(response) {
+      window.location.href = "thankyou.html";
+    },
+    modal: {
+      ondismiss: function() {}
+    }
+  });
+
+  rzp.open();
 }
 
 /* ── FAQ ── */
