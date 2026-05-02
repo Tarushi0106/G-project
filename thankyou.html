@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -71,6 +71,24 @@
     }
     @keyframes waglow{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.42)}50%{box-shadow:0 6px 36px rgba(37,211,102,.66)}}
     .wa-btn:hover{transform:translateY(-2px)}
+
+    /* email input row (shown if no email in storage) */
+    #emailRow{display:none;margin-bottom:18px}
+    #emailRow input{
+      width:100%;padding:13px 16px;
+      border:1.5px solid #e5e7eb;border-radius:100px;
+      font-size:14px;font-family:'Inter',sans-serif;
+      outline:none;color:#0a0a0a;margin-bottom:10px;
+    }
+    #emailRow input:focus{border-color:#f59e0b}
+    #resendBtn{
+      width:100%;background:#f59e0b;color:#0a0a0a;
+      font-size:14px;font-weight:800;
+      padding:13px;border-radius:100px;
+      border:none;cursor:pointer;
+      font-family:'Inter',sans-serif;
+    }
+
     .foot-note{font-size:12px;color:#9ca3af;line-height:1.75;margin-top:4px}
     .brand{margin-top:28px;font-size:13px;color:#9ca3af;line-height:1.8}
     .brand strong{color:#374151}
@@ -83,7 +101,14 @@
   <div class="tick">✓</div>
   <h1>You're Successfully Enrolled! 🎉</h1>
 
+  <!-- Live status badge -->
   <div id="emailStatus"></div>
+
+  <!-- Fallback: manual email input if auto-send couldn't find stored email -->
+  <div id="emailRow">
+    <input type="email" id="manualEmail" placeholder="✉️  Enter your email to receive details" />
+    <button id="resendBtn" onclick="sendWithManualEmail()">📧 Send Confirmation Email</button>
+  </div>
 
   <div class="message-box">
     <p>All the important updates, including <strong>date, time, and joining details</strong>, will be shared inside our WhatsApp Community.</p>
@@ -107,44 +132,79 @@
   </div>
 
 </div>
-<script>
-  /* ─────────────────────────────────────────
-     EMAILJS CREDENTIALS
-     Paste your 3 values from emailjs.com here
-  ───────────────────────────────────────── */
-  var EJ_PUBLIC_KEY  = "pDPg_VW_dN1dOnjTJ";
-  var EJ_SERVICE_ID  = "service_jmgol08";
-  var EJ_TEMPLATE_ID = "template_32t91xo";
-  /* ───────────────────────────────────────── */
 
-  var userEmail = localStorage.getItem('enrollEmail') || '';
-  var statusEl  = document.getElementById('emailStatus');
+<script>
+  var FROM    = "geetanshuchhabra123@gmail.com";
+  var PASS    = "yicjliyvzuwadtfr";
+
+  var stored  = localStorage.getItem('enrollEmail') || '';
+  var statusEl = document.getElementById('emailStatus');
 
   function setStatus(type, html) {
     statusEl.className = type;
     statusEl.innerHTML = html;
   }
 
-  function sendEmail() {
-    if (!userEmail || EJ_PUBLIC_KEY === "PASTE_PUBLIC_KEY_HERE") return;
+  function doSend(toEmail) {
+    if (!toEmail) return;
 
-    emailjs.init(EJ_PUBLIC_KEY);
     setStatus('sending', '<span class="spin"></span>&nbsp; Sending confirmation email…');
 
-    emailjs.send(EJ_SERVICE_ID, EJ_TEMPLATE_ID, {
-      to_email      : userEmail,
-      whatsapp_link : "https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2"
-    })
-    .then(function() {
-      setStatus('sent', '✅ Confirmation email sent to ' + userEmail);
-      localStorage.removeItem('enrollEmail');
-    })
-    .catch(function() {
-      setStatus('error', '⚠️ Could not send email — please screenshot this page');
+    var body =
+      "Hi,\n\n" +
+      "You're Successfully Enrolled! 🎉\n\n" +
+      "All the important updates, including date, time, and joining details, " +
+      "will be shared inside our WhatsApp Community.\n\n" +
+      "👉 Please join the community using the link below to stay updated and avoid missing anything.\n\n" +
+      "📲 Join Here: https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2\n\n" +
+      "We're excited to have you onboard — see you inside!\n\n" +
+      "— Geetanshu Chhabra\n" +
+      "AI Income Masterclass";
+
+    Email.send({
+      Host     : "smtp.gmail.com",
+      Username : FROM,
+      Password : PASS,
+      To       : toEmail,
+      From     : FROM,
+      Subject  : "You're Successfully Enrolled! 🎉 – AI Income Masterclass",
+      Body     : body
+    }).then(function(msg) {
+      if (msg === "OK") {
+        setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
+        localStorage.removeItem('enrollEmail');
+        document.getElementById('emailRow').style.display = 'none';
+      } else {
+        setStatus('error', '⚠️ ' + msg + ' — try again or screenshot this page');
+        showManualInput();
+      }
+    }).catch(function(err) {
+      setStatus('error', '⚠️ Could not send email — try entering it below');
+      showManualInput();
     });
   }
 
-  window.addEventListener('load', sendEmail);
+  function showManualInput() {
+    document.getElementById('emailRow').style.display = 'block';
+  }
+
+  function sendWithManualEmail() {
+    var email = document.getElementById('manualEmail').value.trim();
+    if (!email) {
+      document.getElementById('manualEmail').style.borderColor = '#ef4444';
+      return;
+    }
+    doSend(email);
+  }
+
+  window.addEventListener('load', function() {
+    if (stored) {
+      doSend(stored);
+    } else {
+      // No email in storage — show manual input
+      showManualInput();
+    }
+  });
 </script>
 </body>
 </html>
