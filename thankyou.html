@@ -130,12 +130,14 @@
       to_email      : toEmail,
       whatsapp_link : "https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2"
     })
-    .then(function() {
+    .then(function(res) {
+      console.log("EmailJS success:", res);
       setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
       localStorage.removeItem('enrollEmail');
     })
-    .catch(function() {
-      setStatus('error', '⚠️ Could not send email — please screenshot this page');
+    .catch(function(err) {
+      console.error("EmailJS error:", JSON.stringify(err));
+      setStatus('error', '⚠️ Error ' + (err.status || '') + ': ' + (err.text || JSON.stringify(err)));
     });
   }
 
