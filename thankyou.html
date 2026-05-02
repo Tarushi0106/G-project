@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Successful – AI Income Masterclass</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Inter',system-ui,sans-serif;
+      background:#f0fdf4;
+      color:#0a0a0a;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:32px 20px;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:24px;
+      padding:48px 36px;
+      max-width:480px;
+      width:100%;
+      text-align:center;
+      box-shadow:0 12px 48px rgba(0,0,0,.1);
+      border:1.5px solid #bbf7d0;
+      animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes popIn{from{opacity:0;transform:scale(.88) translateY(20px)}to{opacity:1;transform:none}}
+
+    .tick{
+      width:72px;height:72px;
+      background:linear-gradient(135deg,#16a34a,#22c55e);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 24px;
+      font-size:34px;
+      box-shadow:0 6px 24px rgba(22,163,74,.3);
+      animation:bounce .6s .3s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes bounce{from{transform:scale(0)}to{transform:scale(1)}}
+
+    h1{
+      font-size:clamp(22px,5vw,28px);
+      font-weight:900;
+      letter-spacing:-.02em;
+      color:#0a0a0a;
+      margin-bottom:10px;
+    }
+    .sub{
+      font-size:15px;
+      color:#6b7280;
+      line-height:1.75;
+      max-width:360px;
+      margin:0 auto 32px;
+    }
+    .sub strong{color:#0a0a0a}
+
+    .divider{
+      height:1px;background:#e5e7eb;
+      margin:0 0 28px;
+    }
+
+    .step-label{
+      font-size:11px;font-weight:700;
+      letter-spacing:.12em;text-transform:uppercase;
+      color:#16a34a;margin-bottom:14px;
+    }
+    .instruction{
+      background:#f0fdf4;
+      border:1.5px solid #bbf7d0;
+      border-radius:14px;
+      padding:18px 20px;
+      font-size:14px;
+      color:#15803d;
+      font-weight:600;
+      line-height:1.65;
+      margin-bottom:22px;
+      text-align:left;
+    }
+    .instruction span{display:block;margin-bottom:4px;font-size:13px;font-weight:500;color:#4ade80}
+
+    .wa-btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      background:#25D366;
+      color:#fff;
+      font-size:17px;
+      font-weight:800;
+      padding:17px 24px;
+      border-radius:100px;
+      text-decoration:none;
+      border:none;
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      transition:transform .15s,box-shadow .15s;
+      box-shadow:0 6px 24px rgba(37,211,102,.4);
+      width:100%;
+      letter-spacing:.01em;
+      animation:glow 2s ease-in-out infinite;
+    }
+    @keyframes glow{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.4)}50%{box-shadow:0 6px 36px rgba(37,211,102,.65)}}
+    .wa-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(37,211,102,.55)}
+    .wa-btn:active{transform:none}
+
+    .wa-icon{font-size:22px}
+
+    .note{
+      margin-top:16px;
+      font-size:12.5px;
+      color:#9ca3af;
+      line-height:1.6;
+    }
+
+    .brand{
+      margin-top:36px;
+      font-size:13px;
+      color:#9ca3af;
+      font-weight:500;
+    }
+    .brand strong{color:#0a0a0a}
+
+    @media(max-width:480px){
+      .card{padding:36px 22px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="tick">✓</div>
+
+    <h1>Payment Successful! 🎉</h1>
+    <p class="sub">
+      Welcome to the <strong>AI Income Masterclass</strong>.<br>
+      You're now one step away from getting full access.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="step-label">Your Next Step</div>
+
+    <div class="instruction">
+      <span>👇 Click the button below to:</span>
+      Join the private WhatsApp community where all masterclass content, resources, and updates are shared.
+    </div>
+
+    <a class="wa-btn" href="https://chat.whatsapp.com/KnOCluBP7cIBaJLfwBq7MC" target="_blank">
+      <span class="wa-icon">💬</span>
+      Join Private WhatsApp Community
+    </a>
+
+    <p class="note">
+      ⚡ Instant access · Save this page in case you need to re-join<br>
+      🔒 This link is only shared after successful payment
+    </p>
+
+    <div class="brand">
+      <strong>Geetanshu Chhabra</strong> · AI Income Masterclass
+    </div>
+
+  </div>
+
+</body>
+</html>
