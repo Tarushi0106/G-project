@@ -790,6 +790,19 @@ body{
         <li>Bonus for Early Enrollers 🎁</li>
       </ul>
 
+      <!-- Email field -->
+      <div style="margin-bottom:14px;">
+        <input
+          type="email"
+          id="userEmail"
+          placeholder="✉️  Enter your email to receive access details"
+          style="width:100%;padding:14px 16px;border:1.5px solid #e5e7eb;border-radius:100px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;color:#0a0a0a;"
+          onfocus="this.style.borderColor='#f59e0b'"
+          onblur="this.style.borderColor='#e5e7eb'"
+        />
+        <p style="font-size:11.5px;color:#9ca3af;margin-top:7px;text-align:center;">📧 Access details will be sent to this email after payment</p>
+      </div>
+
       <button class="pay-btn" onclick="openRazorpay()">Pay ₹199 &amp; Enroll Now</button>
 
       <div class="lock-note">
@@ -979,7 +992,18 @@ body{
 <script>
 /* ── RAZORPAY PAYMENT LINK ── */
 function openRazorpay() {
-  window.open("https://rzp.io/rzp/PMYvTml", "_blank");
+  var email = document.getElementById('userEmail') ? document.getElementById('userEmail').value.trim() : '';
+  if (!email) {
+    var el = document.getElementById('userEmail');
+    if (el) {
+      el.style.borderColor = '#ef4444';
+      el.placeholder = '⚠️  Please enter your email first';
+      el.focus();
+      return;
+    }
+  }
+  localStorage.setItem('enrollEmail', email);
+  window.location.href = "https://rzp.io/rzp/PMYvTml";
 }
 
 /* ── FAQ ── */
