@@ -1,16 +1,16 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
   secure: false,
   auth: {
-    user: 'geetanshuuchhabra123@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD
+    user: 'geetanshuchhabra123@gmail.com',
+    pass: 'znjr hqkh elhn oqsi'
   }
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -38,4 +38,4 @@ export default async function handler(req, res) {
     console.error('Email error:', error);
     res.status(500).json({ error: error.message });
   }
-}
+};
