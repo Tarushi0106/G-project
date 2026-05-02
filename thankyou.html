@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -27,18 +27,28 @@
       animation:rise .5s cubic-bezier(.34,1.4,.64,1) both;
     }
     @keyframes rise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
-.tick{
-       width:76px;height:76px;
-       background:linear-gradient(135deg,#16a34a,#22c55e);
-       border-radius:50%;
-       display:flex;align-items:center;justify-content:center;
-       margin:0 auto 24px;font-size:36px;
-       box-shadow:0 8px 28px rgba(22,163,74,.32);
-       animation:pop .55s .2s cubic-bezier(.34,1.56,.64,1) both;
-     }
-     @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-     h1{font-size:clamp(22px,5vw,27px);font-weight:900;letter-spacing:-.02em;color:#0a0a0a;margin-bottom:16px;line-height:1.25}
-     .message-box{
+    .tick{
+      width:76px;height:76px;
+      background:linear-gradient(135deg,#16a34a,#22c55e);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 24px;font-size:36px;
+      box-shadow:0 8px 28px rgba(22,163,74,.32);
+      animation:pop .55s .2s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+    h1{font-size:clamp(22px,5vw,27px);font-weight:900;letter-spacing:-.02em;color:#0a0a0a;margin-bottom:16px;line-height:1.25}
+    #emailStatus{
+      display:none;font-size:13px;font-weight:600;
+      padding:10px 18px;border-radius:100px;
+      margin-bottom:20px;align-items:center;gap:8px;
+    }
+    #emailStatus.sending{display:inline-flex;background:#eff6ff;color:#1d4ed8;border:1.5px solid #bfdbfe}
+    #emailStatus.sent{display:inline-flex;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0}
+    #emailStatus.error{display:inline-flex;background:#fef2f2;color:#dc2626;border:1.5px solid #fecaca}
+    .spin{width:13px;height:13px;flex-shrink:0;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .message-box{
       background:#f9fafb;border:1px solid #e5e7eb;
       border-radius:16px;padding:22px 20px;
       text-align:left;margin-bottom:24px;
@@ -72,9 +82,11 @@
 <div class="card">
 
   <div class="tick">✓</div>
-<h1>You're Successfully Enrolled! 🎉</h1>
- 
-   <div class="message-box">
+  <h1>You're Successfully Enrolled! 🎉</h1>
+
+  <div id="emailStatus"></div>
+
+  <div class="message-box">
     <p>All the important updates, including <strong>date, time, and joining details</strong>, will be shared inside our WhatsApp Community.</p>
     <p>👉 Please join the community using the link below to stay updated and avoid missing anything.</p>
   </div>
@@ -98,9 +110,40 @@
 </div>
 
 <script>
-   window.addEventListener('load', function() {
-     localStorage.removeItem('enrollEmail');
-   });
- </script>
+  var urlParams = new URLSearchParams(window.location.search);
+  var stored   = localStorage.getItem('enrollEmail') || urlParams.get('email') || 'tarushi0106@gmail.com';
+  var statusEl = document.getElementById('emailStatus');
+
+  function setStatus(type, html) {
+    statusEl.className = type;
+    statusEl.innerHTML = html;
+  }
+
+  function doSend(toEmail) {
+    if (!toEmail) return;
+
+    console.log("Sending email to:", toEmail);
+    emailjs.init("pDPg_VW_dN1dOnjTJ");
+    setStatus('sending', '<span class="spin"></span>&nbsp; Sending confirmation email…');
+
+    emailjs.send("service_jmgol08", "template_32t91xo", {
+      to_email      : toEmail,
+      whatsapp_link : "https://chat.whatsapp.com/DvcxL1vLTKa9ReNe1UKSo2"
+    })
+    .then(function(res) {
+      console.log("EmailJS success:", res);
+      setStatus('sent', '✅ Confirmation email sent to ' + toEmail);
+      localStorage.removeItem('enrollEmail');
+    })
+    .catch(function(err) {
+      console.error("EmailJS error:", JSON.stringify(err));
+      setStatus('error', '⚠️ Error ' + (err.status || '') + ': ' + (err.text || JSON.stringify(err)));
+    });
+  }
+
+  window.addEventListener('load', function() {
+    if (stored) doSend(stored);
+  });
+</script>
 </body>
 </html>
