@@ -641,7 +641,7 @@ body{
   <!-- TOP BAR -->
   <div class="topbar">
     <span class="topbar-text"><b>Limited Slots</b> &nbsp;·&nbsp; Price increases after this batch closes</span>
-    <span class="countdown-wrap">⏳ Offer ends in &nbsp;<span id="countdown">--:--:--</span></span>
+    <span class="countdown-wrap">⏳ Offer ends in &nbsp;<span id="countdown">30:00</span></span>
   </div>
 
   <!-- NAV -->
@@ -1063,20 +1063,25 @@ body{
 <script>
 /* ── COUNTDOWN TIMER ── */
 (function() {
-  var end = new Date();
-  end.setHours(23,59,59,0);
-  if (new Date() > end) end.setDate(end.getDate() + 1);
+  var MINUTES = 30;
+  var key = 'offerEndTime';
+  var stored = localStorage.getItem(key);
+  var end;
+  if (stored) {
+    end = new Date(parseInt(stored, 10));
+  } else {
+    end = new Date(Date.now() + MINUTES * 60 * 1000);
+    localStorage.setItem(key, end.getTime());
+  }
 
   function tick() {
-    var now  = new Date();
-    var diff = end - now;
-    if (diff <= 0) { end.setDate(end.getDate() + 1); diff = end - new Date(); }
-    var h = Math.floor(diff / 3600000);
-    var m = Math.floor((diff % 3600000) / 60000);
+    var diff = end - Date.now();
+    if (diff <= 0) { diff = 0; }
+    var m = Math.floor(diff / 60000);
     var s = Math.floor((diff % 60000) / 1000);
     var pad = function(n){ return String(n).padStart(2,'0'); };
     var el = document.getElementById('countdown');
-    if (el) el.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    if (el) el.textContent = pad(m) + ':' + pad(s);
   }
   tick();
   setInterval(tick, 1000);
