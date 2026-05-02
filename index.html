@@ -620,6 +620,7 @@ body{
   #stickyCta{display:block}
   .hero{padding:60px 0 52px}
 }
+@keyframes modalIn{from{opacity:0;transform:scale(.92) translateY(16px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -791,20 +792,7 @@ body{
         <li>Bonus for Early Enrollers 🎁</li>
       </ul>
 
-      <!-- Email field -->
-      <div style="margin-bottom:14px;">
-        <input
-          type="email"
-          id="userEmail"
-          placeholder="✉️  Enter your email to receive access details"
-          style="width:100%;padding:14px 16px;border:1.5px solid #e5e7eb;border-radius:100px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;color:#0a0a0a;"
-          onfocus="this.style.borderColor='#f59e0b'"
-          onblur="this.style.borderColor='#e5e7eb'"
-        />
-        <p style="font-size:11.5px;color:#9ca3af;margin-top:7px;text-align:center;">📧 Access details will be sent to this email after payment</p>
-      </div>
-
-      <button class="pay-btn" onclick="openRazorpay()">Pay ₹199 &amp; Enroll Now</button>
+      <button class="pay-btn" onclick="openDetailsModal()">Pay ₹199 &amp; Enroll Now</button>
 
       <div class="lock-note">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -984,27 +972,113 @@ body{
 
 <!-- STICKY MOBILE CTA -->
 <div id="stickyCta">
-  <button onclick="openRazorpay()">🔥 Enroll Now for ₹199</button>
+  <button onclick="openDetailsModal()">🔥 Enroll Now for ₹199</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     DETAILS MODAL
+══════════════════════════════════════ -->
+<div id="detailsModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:420px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.2);animation:modalIn .3s cubic-bezier(.34,1.4,.64,1) both;">
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:36px;margin-bottom:10px;">📋</div>
+      <h2 style="font-size:20px;font-weight:900;letter-spacing:-.02em;color:#0a0a0a;margin-bottom:6px;">Enter Your Details</h2>
+      <p style="font-size:13px;color:#6b7280;">Required before proceeding to payment</p>
+    </div>
+
+    <!-- Fields -->
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+
+      <div>
+        <label style="font-size:12px;font-weight:700;color:#374151;letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:6px;">Full Name</label>
+        <input id="f_name" type="text" placeholder="e.g. Rahul Sharma"
+          style="width:100%;padding:13px 16px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:14px;font-family:'Inter',sans-serif;outline:none;color:#0a0a0a;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'" />
+      </div>
+
+      <div>
+        <label style="font-size:12px;font-weight:700;color:#374151;letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:6px;">Phone Number</label>
+        <input id="f_phone" type="tel" placeholder="e.g. 9876543210"
+          style="width:100%;padding:13px 16px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:14px;font-family:'Inter',sans-serif;outline:none;color:#0a0a0a;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'" />
+      </div>
+
+      <div>
+        <label style="font-size:12px;font-weight:700;color:#374151;letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:6px;">Email Address</label>
+        <input id="f_email" type="email" placeholder="e.g. rahul@gmail.com"
+          style="width:100%;padding:13px 16px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:14px;font-family:'Inter',sans-serif;outline:none;color:#0a0a0a;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'" />
+        <p style="font-size:11px;color:#9ca3af;margin-top:5px;">📧 Enrollment details will be sent here</p>
+      </div>
+
+    </div>
+
+    <!-- Error message -->
+    <div id="modalError" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:#dc2626;margin-bottom:14px;"></div>
+
+    <!-- Buttons -->
+    <button onclick="submitDetails()"
+      style="width:100%;background:#f59e0b;color:#0a0a0a;font-size:16px;font-weight:800;padding:15px;border-radius:100px;border:none;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 4px 18px rgba(245,158,11,.4);transition:transform .15s;"
+      onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+      Proceed to Payment →
+    </button>
+
+    <button onclick="closeModal()"
+      style="width:100%;background:none;border:none;color:#9ca3af;font-size:13px;font-weight:600;padding:12px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:6px;">
+      Cancel
+    </button>
+
+    <p style="text-align:center;font-size:11.5px;color:#9ca3af;margin-top:8px;">
+      🔒 Your details are safe and only used for enrollment
+    </p>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════
      SCRIPTS
 ══════════════════════════════════════ -->
 <script>
-/* ── RAZORPAY CHECKOUT ── */
-function openRazorpay() {
-  var emailEl = document.getElementById('userEmail');
-  var email = emailEl ? emailEl.value.trim() : '';
+/* ── MODAL ── */
+function openDetailsModal() {
+  var m = document.getElementById('detailsModal');
+  m.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  setTimeout(function(){ document.getElementById('f_name').focus(); }, 100);
+}
 
-  if (!email) {
-    emailEl.style.borderColor = '#ef4444';
-    emailEl.placeholder = '⚠️  Please enter your email first';
-    emailEl.focus();
-    return;
-  }
+function closeModal() {
+  document.getElementById('detailsModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
 
+// close on backdrop click
+document.getElementById('detailsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function submitDetails() {
+  var name  = document.getElementById('f_name').value.trim();
+  var phone = document.getElementById('f_phone').value.trim();
+  var email = document.getElementById('f_email').value.trim();
+  var errEl = document.getElementById('modalError');
+
+  // Validate
+  if (!name) { showErr('Please enter your full name.'); document.getElementById('f_name').focus(); return; }
+  if (!phone || phone.length < 10) { showErr('Please enter a valid 10-digit phone number.'); document.getElementById('f_phone').focus(); return; }
+  if (!email || !email.includes('@')) { showErr('Please enter a valid email address.'); document.getElementById('f_email').focus(); return; }
+
+  errEl.style.display = 'none';
+
+  // Save to localStorage
   localStorage.setItem('enrollEmail', email);
+  localStorage.setItem('enrollName',  name);
+  localStorage.setItem('enrollPhone', phone);
 
+  closeModal();
+
+  /* ── RAZORPAY CHECKOUT ── */
   var rzp = new Razorpay({
     key         : "rzp_live_SkaPdqfGZsWB8S",
     amount      : 19900,
@@ -1012,17 +1086,21 @@ function openRazorpay() {
     name        : "Geetanshu Chhabra",
     description : "AI Income Masterclass",
     image       : "",
-    prefill     : { email: email, name: "", contact: "" },
+    prefill     : { name: name, email: email, contact: phone },
     theme       : { color: "#f59e0b" },
     handler     : function(response) {
       window.location.href = "thankyou.html";
     },
-    modal: {
-      ondismiss: function() {}
-    }
+    modal       : { ondismiss: function() {} }
   });
 
   rzp.open();
+}
+
+function showErr(msg) {
+  var el = document.getElementById('modalError');
+  el.style.display = 'block';
+  el.textContent   = '⚠️  ' + msg;
 }
 
 /* ── FAQ ── */
